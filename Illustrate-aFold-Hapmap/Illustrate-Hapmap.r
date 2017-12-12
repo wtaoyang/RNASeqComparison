@@ -125,25 +125,3 @@ haproq <- ResROTS(x,cond)
 haprbs <- ResbaySeq(HapMap,cond)
 
 
-ordinaryFD <- function(x, condA, condB, log=TRUE)
-{
-  ma <- rowMeans(x[,condA])
-  mb <- rowMeans(x[,condB])
-  if(log) fc <- log2(mb+1)-log2(ma+1)
-  else  fc <- mb-ma
-  return (fc)
-}
-bsd <- read.table("HapMap_res.txt")
-
-tab=read.table("human_genes_f.txt",sep="\t",row.names=1,header=T)
-xx=bsd
-tfc=x <- ordinaryFD(upperqnorm(HapMap),1:17,18:41)
-apv=xx[,2]
-sum(apv<0.05)
-cc=cbind(tab[rownames(xx),],apv)
-cc=cc[order(apv,decreasing = F),]
-cc[1:10,]
-
-cc=cbind(tab[rownames(xx),],tfc)
-cc=cc[order(abs(tfc),decreasing = T),]
-cc[1:10,]

@@ -1,4 +1,4 @@
-##moderate from deseq2
+
 setwd("D:/source/RNASEQTest/RNASEQtest")
 source("./Rscript/DE.r")
 
@@ -79,10 +79,10 @@ for(i in 1:10)
   tres <- ResVoom(mat,cond,sf=sfs)
   tres <-tres[rownames(mat),]
   vmresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond)
-  #bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond,sf=sfs)
-  #bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond)
+  bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond,sf=sfs)
+  bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   tres <- ResABSSeq(mat,cond)
   abres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   #not suit for ROTS
@@ -131,10 +131,10 @@ for(i in 1:10)
   tres <- ResVoom(mat,cond,sf=sfs)
   tres <-tres[rownames(mat),]
   vmresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond)
-  #bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond,sf=sfs)
-  #bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond)
+  bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond,sf=sfs)
+  bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   tres <- ResABSSeq(mat,cond)
   abres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   tres <- ResROTS(log2(totalnorm(mat)+1),cond)
@@ -182,10 +182,10 @@ for(i in 1:10)
   tres <- ResVoom(mat,cond,sf=sfs)
   tres <-tres[rownames(mat),]
   vmresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond)
-  #bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
-  #tres <- ResbaySeq(mat,cond,sf=sfs)
-  #bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond)
+  bsres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
+  tres <- ResbaySeq(mat,cond,sf=sfs)
+  bsresq[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   tres <- ResABSSeq(mat,cond)
   abres[i,] <-statsCal(tres[,1],tres[,2],tres[,3],beta,gname)
   tres <- ResROTS(log2(totalnorm(mat)+1),cond)
@@ -201,13 +201,6 @@ NB2000res=list("aFold"=afres,"aFoldt"=afrest,"aFoldg"=afresg,"aFoldq"=afresq,
 
 save(NB2000res,file="NB2000res.Rdata")
 
-
-load("NB2000res.Rdata")
-load("bsRNB2000res.Rdata")
-NB2000res[["baySeq"]] <- bsRNB2000res[["baySeq"]]
-NB2000res[["baySeqq"]] <- bsRNB2000res[["baySeqq"]]
-save(NB2000res,file="NB2000res.Rdata")
-
 NBRres <-NB2000res
 ###boxplot
 pdf("NB2000.pdf",width=12,height=8)
@@ -218,7 +211,6 @@ pd=cbind(NBRres[["aFold"]][1:10,3],NBRres[["DESeq2"]][1:10,3],NBRres[["edgeR"]][
          NBRres[["Voom"]][11:20,3],NBRres[["baySeq"]][11:20,3],NBRres[["ABSSeq"]][11:20,3],NBRres[["ROTS"]][11:20,3],
          NBRres[["aFold"]][21:30,3],NBRres[["DESeq2"]][21:30,3],NBRres[["edgeR"]][21:30,3],
          NBRres[["Voom"]][21:30,3],NBRres[["baySeq"]][21:30,3],NBRres[["ABSSeq"]][21:30,3],NBRres[["ROTS"]][21:30,3])
-#colnames(pd)=rep(c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN"),3)
 boxplot(pd,at=c(1:7,9:15,17:23),frame=T,xlab="",ylab="",main="",axes=F,xlim=c(0.5,23.5),cex.axis=0.7,ylim=c(0.7,1),col=c(2:8))
 axis(2,at=seq(0.4,1.0,0.1),labels=F)
 #axis(1,at=1:7,labels=rep("",7))
@@ -234,33 +226,6 @@ abline(v=c(8,16),lty=2,col="gray")
 
 dev.off()
 
-
-fac=rep(c("aFold","DESeq2","edgeR","Voom","baySeq","ABSSeq","ROTS"),rep(10,7))
-y=pd[,1:7]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","DESeq2","limmaVoom")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m1<-aov(y~factors,data=b)
-summary(m1)
-TukeyHSD(m1)
-#deseq2
-y=pd[,8:14]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m2<-aov(y~factors,data=b)
-summary(m2)
-TukeyHSD(m2)
-#rots
-
-y=pd[,15:21]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m3<-aov(y~factors,data=b)
-summary(m3)
-TukeyHSD(m3)
-#rots
 
 
 pdf("NBR-q_2000_scat.pdf",width=12,height=8)
@@ -297,7 +262,6 @@ bpy=c(NBRres[["DESeq2q"]][1:10,1],NBRres[["edgeRq"]][1:10,1],
       NBRres[["DESeq2q"]][21:30,1],NBRres[["edgeRq"]][21:30,1],
       NBRres[["Voomq"]][21:30,1],NBRres[["baySeqq"]][21:30,1],NBRres[["ROTSq"]][21:30,1])
 
-#colnames(pd)=rep(c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN"),3)
 plot(px,py,frame=T,xlab="",ylab="",main="",axes=F,xlim=c(0,3.2),cex.axis=0.7,ylim=c(0,1),col=rep(c(2:8),each=10),pch=16)
 points(apx,apy,col=2,pch=c(3:5))
 points(bpx,bpy,col=rep(c(3:6,8),each=10),pch=1)

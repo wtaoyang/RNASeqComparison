@@ -33,32 +33,4 @@ dev.off()
 
 
 
-fac=rep(c("aFold","DESeq2","edgeR","Voom","baySeq","ABSSeq","ROTS"),rep(10,7))
-y=pd[,1:7]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","DESeq2","limmaVoom")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m1<-aov(y~factors,data=b)
-summary(m1)
-TukeyHSD(m1)
-
-y=pd[,8:14]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m2<-aov(y~factors,data=b)
-summary(m2)
-TukeyHSD(m2)
-
-
-y=pd[,15:21]
-#colnames(y)=c("ABSSeq","edgeR","DESeq","baySeq","DESeq2","limmaVoom","limmaQN")
-b<-data.frame(y=unlist(list(y)),factors=fac)
-bartlett.test(y~factors,data=b)
-m3<-aov(y~factors,data=b)
-summary(m3)
-TukeyHSD(m3)
-
-
-
 
